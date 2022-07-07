@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<h1>Welcome to the Machine</h1>
+
+	<!-- Below I'm gonna open a form element that allows a user to press a button to send a get request to another servlet -->
+
+	<form method="GET" action="dirserv">
+		<!-- I'm sending a get request as my http method upon clicking the method which will trigger the doGet() method in the servlet mapped to /dirserv -->
+
+		<!-- p is the paragraph tag for some small text -->
+		<p>Direct Servlet, GET!</p>
+
+		<!-- below is a button in the form of an input tag -->
+		<!-- it needs only the opening <input> tag thingie -->
+		<input type="submit" value="Direct Text Response">
+
+	</form>
+
+
+	<form method="POST" action="dirserv">
+		<p>Direct Servlet, POST!</p>
+		<input type="submit" value="Send Post Request to Direct Servlet">
+
+	</form>
+
+
+</body>
+</html>
