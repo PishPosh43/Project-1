@@ -5,14 +5,13 @@ import java.lang.reflect.Field;
 import com.revature.annotations.Column;
 import com.revature.annotations.Id;
 
-public class ForeignKeyField {
+public class PrimaryKeyField {
+private Field field;
 	
-	public Field field;
-	
-	public ForeignKeyField(Field field) {
-		if(field.getAnnotation(JoinColumn.class) == null) {
-			throw new IllegalStateException("Cannot create ForeignKeyField object. Provided field: "
-					+ getName() + " is not annotated with @JoinColumn");
+	public PrimaryKeyField(Field field) {
+		if(field.getAnnotation(Id.class) == null) {
+			throw new IllegalStateException("Cannot create PrimaryKeyField object. Provided field: "
+					+ getName() + " is not annotate	d with @Id");
 		}
 		this.field=field;
 	}
@@ -28,5 +27,4 @@ public class ForeignKeyField {
 	public String getColumnName() {
 		return field.getAnnotation(Column.class).columnName();
 	}
-	
 }
