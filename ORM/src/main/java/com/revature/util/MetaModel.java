@@ -50,7 +50,7 @@ public class MetaModel<T> {
 		return columnFields;
 	}
 
-	public List<ForeignKeyField> getForeignKey() {
+	public List<ForeignKeyField> getForeignKeys() {
 		Field[] fields = clazz.getDeclaredFields();
 
 		for (Field field : fields) {

@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface JoinColumn {
-	String getJoinColumn();
+	String columnName();
 }
