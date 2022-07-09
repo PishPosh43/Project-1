@@ -1,6 +1,8 @@
 package com.revature.util;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +15,7 @@ public class Configuration {
 	private List<MetaModel<Class<?>>> metaModelList;
 	
 
-	public Configuration addAnnotatedClass(Class annotatedClass) {
+	public Configuration addAnnotatedClass(Class<?> annotatedClass) {
 		
 		if(metaModelList == null) {
 			metaModelList = new LinkedList<>();
@@ -29,6 +31,8 @@ public class Configuration {
 	}
 	
 	public Connection getConnection(String dbUrl, String dbUsername, String dbPassword) {
+		Connection conn;
+		
 		
 		this.dbUrl = dbUrl;
 		this.dbUsername = dbUsername;
@@ -37,7 +41,24 @@ public class Configuration {
 		//ENTER CODE & LOGIC HERE
 		
 		//REPLACE NULL AFTER WRITING CODE BODY;
-		return null;
+		try {
+			conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+			
+			
+			if (conn != null && !conn.isClosed()) {
+				System.out.println("Returning previously-established connection");
+				return conn;
+			}
+			
+
+		} catch (SQLException e) {
+			
+			System.out.println("Unable to establish a connection");
+			e.printStackTrace();
+			return null;
+		}
+		return conn;
+		
 	}
 	
 }

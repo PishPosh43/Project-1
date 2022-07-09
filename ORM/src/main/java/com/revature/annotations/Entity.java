@@ -13,10 +13,9 @@ public @interface Entity {
 	String tableName();
 }
 
-
 //Target: tells where an annotation can be used
 //3 Retention Policies:
-	//Source - annotation accessible during compilation
-	//Class - annot accessible during class loading
-	//Runtime - same as above but during runtime
-		//Runtime mostly used in orm
+// Source - annotation accessible during compilation
+// Class - annot accessible during class loading
+// Runtime - same as above but during runtime
+// Runtime mostly used in orm
