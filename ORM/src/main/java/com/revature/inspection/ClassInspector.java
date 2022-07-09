@@ -2,7 +2,9 @@ package com.revature.inspection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 
 public class ClassInspector {
@@ -42,6 +44,52 @@ public class ClassInspector {
 		}
 		
 	}
+	
+	
+	public static void listPublicMethods(Class<?> clazz) {
+		
+		System.out.println("Printing public methods" + clazz.getName());
+		Method[] methods = clazz.getMethods();
+		
+		for (Method method: methods) {
+			if(method.getDeclaringClass() == Object.class) {
+				continue;
+			}
+			if(!(method.getModifiers() == (Modifier.PUBLIC))) {
+				continue;
+			}
+			System.out.println("\tMethod Name: " + method.getName());
+			System.out.println("\tMethod Param Count: " + method.getParameterCount());
+			System.out.println("\tMethod declared class: " + method.getDeclaringClass());
+			System.out.println("\tMethod declared annotations: " + Arrays.toString(method.getDeclaredAnnotations()));
+			
+			Parameter[] params = method.getParameters();
+			
+			for (Parameter param: params) {
+				System.out.println("\tParameter Name: " + param.getName());
+				System.out.println("\tParameter Type: " + param.getType());
+			}
+		}
+				
+			
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+		}
+		
+	}
+	
+	
 	
 	
 }
