@@ -2,7 +2,6 @@ package com.revature.util;
 
 import java.lang.reflect.Field;
 
-import com.revature.annotations.Column;
 import com.revature.annotations.Id;
 
 public class PrimaryKeyField {
@@ -25,6 +24,6 @@ private Field field;
 	}
 	
 	public String getColumnName() {
-		return field.getAnnotation(Column.class).columnName();
+		return field.getAnnotation(Id.class).columnName();
 	}
 }

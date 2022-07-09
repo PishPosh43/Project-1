@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import com.revature.annotations.Column;
 import com.revature.annotations.Id;
+import com.revature.annotations.JoinColumn;
 
 public class ForeignKeyField {
 	
@@ -26,7 +27,7 @@ public class ForeignKeyField {
 	}
 	
 	public String getColumnName() {
-		return field.getAnnotation(Column.class).columnName();
+		return field.getAnnotation(JoinColumn.class).columnName();
 	}
 	
 }
