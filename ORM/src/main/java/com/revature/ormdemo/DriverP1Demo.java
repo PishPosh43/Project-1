@@ -1,9 +1,9 @@
 package com.revature.ormdemo;
 
+import java.sql.Connection;
+
 import com.revature.demomodels.DummyUser;
-import com.revature.demomodels.SQLDataTypes;
 import com.revature.util.Configuration;
-import com.revature.util.Mapper;
 
 /*
  * We'll pretend that this class is the class of some developer that pulled in our ORM as a dependency
@@ -28,6 +28,9 @@ public class DriverP1Demo {
 //				DB_URL=jdbc:postgresql://localhost:5432/Project0 - Test
 //				DB_USERNAME=postgres
 		Configuration cfg = new Configuration();
+		Configuration.setDbUrl(System.getenv("DB_URL"));
+		Configuration.setDbUsername(System.getenv("DB_USERNAME"));
+		Configuration.setDbPassword(System.getenv("DB_PWORD"));
 
 		// Step 1 is to add the annotated classes
 
@@ -37,11 +40,12 @@ public class DriverP1Demo {
 		// Step 2: Establish connection to DB uses the DB creds and go from there
 		// cfg.getConnection("jdbc:postgresql://localhost:5432/Project1 - Test",
 		// "postgres", "RevaBro");
-		//System.out.println(System.getenv("DB_URL"));
-		cfg.getConnection(System.getenv("DB_URL"), System.getenv("DB_USERNAME"), System.getenv("DB_PWORD"));
-		//Driver next element = drivers.nextElement();
-		//JOptionPane.showMessageDialog(null, nextElement.acceptsURL(System.getenv("DB_URL"));
-		
+		// System.out.println(System.getenv("DB_URL"));
+		Connection con = cfg.getConnection();
+		// Driver next element = drivers.nextElement();
+		// JOptionPane.showMessageDialog(null,
+		// nextElement.acceptsURL(System.getenv("DB_URL"));
+
 		// We'll iterate over each class that's added and provide some info about the
 		// class
 
@@ -71,22 +75,23 @@ public class DriverP1Demo {
 //						"\t Found a foreign column field named %s, of type %s, which maps to the column with name: %s\n",
 //						fk.getName(), fk.getType(), fk.getColumnName());
 //			
-		
-		//SQLInputImpl input = new SQLInputImpl(cfg.getMetaModels(), );
-		
-		Mapper map = new Mapper();
-		//for(int i=0; i<SQLDataTypes.values().length;i++) {
-			System.out.println(map);
-		//}
-		
-		}
-		
-		
-		
-		
 
-		
+		// SQLInputImpl input = new SQLInputImpl(cfg.getMetaModels(), );
 
+		// Mapper map = new Mapper();
+		// for(int i=0; i<SQLDataTypes.values().length;i++) {
+		// System.out.println(map);
+		// }
+
+//		Map<String, Class<?>> map;
+//		try {
+//			map = a.getTypeMap();
+//			map.put("p1testscript.VARCHAR", Class.forName("java.lang.String"));
+//			a.setTypeMap(map);
+//			System.out.println(map);
+//		} catch (SQLException | ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 
-
+}

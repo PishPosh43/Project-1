@@ -1,50 +1,62 @@
 package com.revature.util;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.dbcp2.BasicDataSource;
 
 //******************************************************************************************
 //******************************************************************************************
 
 public class Configuration {
 
-	private String dbUrl;
-	private String dbUsername;
-	private String dbPassword;
+	private static BasicDataSource ds = new BasicDataSource();
+	private static String dbUrl;
+	private static String dbUsername;
+	private static String dbPassword;
 	private List<MetaModel<Class<?>>> metaModelList;
-	
+
 //******************************************************************************************
 //******************************************************************************************
-	
+
 	public Configuration addAnnotatedClass(Class<?> annotatedClass) {
-		if(metaModelList == null) {
+		if (metaModelList == null) {
 			metaModelList = new LinkedList<>();
 		}
 		metaModelList.add(MetaModel.of(annotatedClass));
 		return this;
 	}
-	
+
 //******************************************************************************************	
-	
-	public List<MetaModel<Class<?>>> getMetaModels(){
+
+	public List<MetaModel<Class<?>>> getMetaModels() {
 		return (metaModelList == null) ? Collections.emptyList() : metaModelList;
 	}
-	
+
 //******************************************************************************************	
-	
-	public Connection getConnection(String dbUrl, String dbUsername, String dbPassword) {
+
+	public Connection getConnection() {// (String dbUrl, String dbUsername, String dbPassword) {
+
 		Connection conn;
-		this.dbUrl = dbUrl;
-		this.dbUsername = dbUsername;
-		this.dbPassword = dbPassword;
-		//ENTER CODE & LOGIC HERE
-		//REPLACE NULL AFTER WRITING CODE BODY;
+
+		;
+		// ENTER CODE & LOGIC HERE
+		// REPLACE NULL AFTER WRITING CODE BODY;
+
+		// ds.setUrl(Configuration.getDbUrl());
+		ds.setUrl(dbUrl);
+		// ds.setUsername(Configuration.getDbUsername());
+		ds.setUsername(dbUsername);
+		// ds.setPassword(Configuration.getDbPassword());
+		ds.setPassword(dbPassword);
+		ds.setMinIdle(5);
+		ds.setMaxIdle(10);
+		ds.setMaxOpenPreparedStatements(100);
 		try {
-			conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+			conn = ds.getConnection();
 			if (conn != null && !conn.isClosed()) {
 				System.out.println("Returning previously-established connection");
 				return conn;
@@ -56,15 +68,31 @@ public class Configuration {
 		}
 		return conn;
 	}
-	
+
+	public static String getDbUrl() {
+		return dbUrl;
+	}
+
+	public static void setDbUrl(String dbUrl) {
+		Configuration.dbUrl = dbUrl;
+	}
+
+	public static String getDbUsername() {
+		return dbUsername;
+	}
+
+	public static void setDbUsername(String dbUsername) {
+		Configuration.dbUsername = dbUsername;
+	}
+
+	public static String getDbPassword() {
+		return dbPassword;
+	}
+
+	public static void setDbPassword(String dbPassword) {
+		Configuration.dbPassword = dbPassword;
+	}
+
 //******************************************************************************************
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

@@ -2,7 +2,7 @@ package com.revature.demomodels;
 
 public enum SQLKeywords {
 
-	CREATE(String.class),
+	CREATE("CREATE TABLE ?"),
 	
 	
 	
