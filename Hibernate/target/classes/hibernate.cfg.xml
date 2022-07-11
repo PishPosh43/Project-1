@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+	<session-factory>
+
+		<!-- Point the dialect at Postgres -->
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+		<!-- Set up our driver using the JDBC dependency that we pulled in -->
+		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+
+		<!-- Time for our JDBC credentials -->
+		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/postgres?currentSchema=hibernate</property>
+		<property name="hibernate.connection.username">postgres</property>
+		<property name="hibernate.connection.password">postgres</property>
+
+		<!-- Connection Pool properties: This is very similar in concept to our 
+			Thread pool stuff from earlier This functions to help speed up DB calls by 
+			establishing multiple connections to our DB so when we perform multiple operations 
+			on the DB it can occur simultaneously and thus faster Default size is 20 -->
+
+		<property name="hibernate.connection.pool_size">10</property>
+
+		<!-- The most important property -->
+		<property name="hibernate.hbm2ddl.auto">create</property>
+
+		<!-- CREATE, VALIDATE, UPDATE, NONE -->
+
+		<!-- CREATE: drops all existing tables and objects with the names provided 
+			in annotations, and then hibernate will recreate the schema for us (CREATE 
+			isn't the best for production, but useful for development -->
+
+		<!-- UPDATE: hibernate will not delete anything, but only add to a schema 
+			if there are objects that haven't been included yet -->
+
+		<!-- Validate: best for production. Checks to make sure that everything 
+			is as expected (all tables and objects are where they're supposed to be) -->
+
+		<!-- NONE: hibernate will not do anything (no removals, no addition -->
+
+		<!-- This next property prints out all our sql statements so we can see 
+			them as the get used -->
+		<property name="hibernate.show_sql">true</property>
+
+		<!-- List our mapped classes -->
+		<mapping class="com.revature.models.Superpowers"></mapping>
+		<mapping class="com.revature.models.Superhero"></mapping>
+		<mapping class="com.revature.models.SuperSchool"></mapping>
+
+
+
+
+	</session-factory>
+
+
+</hibernate-configuration>
