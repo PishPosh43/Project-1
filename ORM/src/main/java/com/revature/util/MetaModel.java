@@ -9,6 +9,9 @@ import com.revature.annotations.Entity;
 import com.revature.annotations.Id;
 import com.revature.annotations.JoinColumn;
 
+//******************************************************************************************
+//******************************************************************************************
+
 public class MetaModel<T> {
 
 	private Class<?> clazz;
@@ -16,6 +19,9 @@ public class MetaModel<T> {
 	private List<ColumnField> columnFields;
 	private List<ForeignKeyField> foreignKeyFields;
 
+//******************************************************************************************
+//******************************************************************************************	
+	
 	public MetaModel(Class<?> clazz) {
 		this.clazz = clazz;
 		this.columnFields = new LinkedList<>();
@@ -25,6 +31,8 @@ public class MetaModel<T> {
 	// transpose a normal java class to a MetaModel Class
 	// to do that we need to check for the @Entity annotation
 
+//******************************************************************************************
+	
 	public static MetaModel<Class<?>> of(Class<?> clazz) {
 		// let's check for the @entity notation
 		if (clazz.getAnnotation(Entity.class) == null) {
@@ -34,6 +42,8 @@ public class MetaModel<T> {
 		return new MetaModel<>(clazz);
 	}
 
+//******************************************************************************************
+	
 	public List<ColumnField> getColumns() {
 
 		Field[] fields = clazz.getDeclaredFields();
@@ -50,6 +60,8 @@ public class MetaModel<T> {
 		return columnFields;
 	}
 
+//******************************************************************************************	
+	
 	public List<ForeignKeyField> getForeignKeys() {
 		Field[] fields = clazz.getDeclaredFields();
 
@@ -66,6 +78,8 @@ public class MetaModel<T> {
 		
 	}
 
+//******************************************************************************************	
+	
 	public PrimaryKeyField getPrimaryKey() {
 		
 		Field[] fields = clazz.getDeclaredFields();
@@ -79,10 +93,14 @@ public class MetaModel<T> {
 		
 		throw new RuntimeException("Did not find a field annotated with @Id in class: " + clazz.getName());
 	}
+
+//******************************************************************************************	
 	
 	public String getSimpleClassName() {
 		return clazz.getSimpleName();
 	}
+
+//******************************************************************************************	
 	
 	public String getClassName() {
 		return clazz.getName();
