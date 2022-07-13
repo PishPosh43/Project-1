@@ -1,11 +1,13 @@
 package com.revature.util;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -18,10 +20,7 @@ import com.revature.demomodels.SQLDataTypes;
 public class Configuration {
 
 	private static BasicDataSource ds = new BasicDataSource();
-	public static Connection conn;
-	private static String dbUrl;
-	private static String dbUsername;
-	private static String dbPassword;
+	public static Connection conn = null;
 	private List<MetaModel<Class<?>>> metaModelList;
 
 //******************************************************************************************
@@ -43,70 +42,52 @@ public class Configuration {
 
 //******************************************************************************************	
 
-	public Connection getConnection() {// (String dbUrl, String dbUsername, String dbPassword) {
+	public static Connection getConnection() {// (String dbUrl, String dbUsername, String dbPassword) {
 
-		Connection conn;
 
-		// ENTER CODE & LOGIC HERE
-		// REPLACE NULL AFTER WRITING CODE BODY;
+		if (conn == null) {
+			Properties props = new Properties();
 
-		// ds.setUrl(Configuration.getDbUrl());
-		ds.setUrl(dbUrl);
-		// ds.setUsername(Configuration.getDbUsername());
-		ds.setUsername(dbUsername);
-		// ds.setPassword(Configuration.getDbPassword());
-		ds.setPassword(dbPassword);
-		ds.setMinIdle(5);
-		ds.setMaxIdle(10);
-		ds.setMaxOpenPreparedStatements(100);
-		try {
-			conn = ds.getConnection();
-			if (conn != null && !conn.isClosed()) {
-				System.out.println("Returning previously-established connection");
-				return conn;
+			try {
+				Class.forName("org.postgresql.Driver");
+				props.load(Configuration.class.getClassLoader().getResourceAsStream("connection.properties"));
+
+				// Getting login info from properties file
+				
+				String url = props.getProperty("url");
+				String username = props.getProperty("username");
+				String password = props.getProperty("password");
+				
+				// Connection pooling 
+				ds.setUrl(url);
+				// ds.setUsername(Configuration.getDbUsername());
+				ds.setUsername(username);
+				// ds.setPassword(Configuration.getDbPassword());
+				ds.setPassword(password);
+				ds.setMinIdle(5);
+				ds.setMaxIdle(10);
+				ds.setMaxOpenPreparedStatements(100);
+
+				conn = ds.getConnection();
+				System.out.println("Got connection!");
+
+			} catch (SQLException | IOException | ClassNotFoundException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			System.out.println("Unable to establish a connection");
-			e.printStackTrace();
-			return null;
 		}
+
 		return conn;
 	}
 
-//******************************************************************************************	
 
-	public static String getDbUrl() {
-		return dbUrl;
-	}
+	// Main to check connection
+	public static void main(String[] args) {
+		Connection conn1 = getConnection();
+        Connection conn2 = getConnection();
 
-//******************************************************************************************	
 
-	public static void setDbUrl(String dbUrl) {
-		Configuration.dbUrl = dbUrl;
-	}
-
-//******************************************************************************************	
-
-	public static String getDbUsername() {
-		return dbUsername;
-	}
-
-//******************************************************************************************	
-
-	public static void setDbUsername(String dbUsername) {
-		Configuration.dbUsername = dbUsername;
-	}
-
-//******************************************************************************************	
-
-	public static String getDbPassword() {
-		return dbPassword;
-	}
-
-//******************************************************************************************	
-
-	public static void setDbPassword(String dbPassword) {
-		Configuration.dbPassword = dbPassword;
+        System.out.println(conn1);
+        System.out.println(conn2);
 	}
 
 //******************************************************************************************
