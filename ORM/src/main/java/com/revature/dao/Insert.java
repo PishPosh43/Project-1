@@ -1,5 +1,5 @@
 package com.revature.dao;
 
 public class Insert {
-	private final String insert = "
+	private final String insert = "";
 }
