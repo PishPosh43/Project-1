@@ -3,6 +3,7 @@ package com.revature.util;
 import java.lang.reflect.Field;
 
 import com.revature.annotations.Column;
+import com.revature.annotations.Id;
 
 public class ColumnField {
 private Field field;
@@ -27,6 +28,14 @@ private Field field;
 		return field.getAnnotation(Column.class).columnName();
 	}
 	
+	public boolean isPrimaryKey() {
+		if(field.getAnnotation(Id.class) != null) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	
 	
 }
