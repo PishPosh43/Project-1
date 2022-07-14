@@ -28,15 +28,16 @@ public class DriverP1Demo {
 		 * Hibernate reads from the hibernate.cfg.xml file but it can be done like this
 		 */
 
-		// The documentation should probably provide some insight into creating you
-		// config object
-//		DB_PWORD=RevaBro
-//				DB_URL=jdbc:postgresql://localhost:5432/Project0 - Test
-//				DB_USERNAME=postgres
+		
 		Configuration cfg = new Configuration();
+//<<<<<<< HEAD
 		Configuration.setDbUrl(System.getenv("DB_URL"));
 		Configuration.setDbUsername(System.getenv("DB_USERNAME"));
 		Configuration.setDbPassword(System.getenv("DB_PWORD"));
+//=======
+//		
+//		
+//>>>>>>> 4519a321b6b84d30b604c0076ea058121e795354
 
 		// Step 1 is to add the annotated classes
 
@@ -44,9 +45,7 @@ public class DriverP1Demo {
 		cfg.addAnnotatedClass(DummyUser.class);
 
 		// Step 2: Establish connection to DB uses the DB creds and go from there
-		// cfg.getConnection("jdbc:postgresql://localhost:5432/Project1 - Test",
-		// "postgres", "RevaBro");
-		// System.out.println(System.getenv("DB_URL"));
+		
 		Connection con = cfg.getConnection();
 		// Driver next element = drivers.nextElement();
 		// JOptionPane.showMessageDialog(null,
@@ -58,17 +57,17 @@ public class DriverP1Demo {
 //		for (MetaModel<?> metaModel : cfg.getMetaModels()) {
 //
 //			System.out.printf("Printing Metamodel for class: %s\n", metaModel.getClassName());
-//			// Let's get the fields from our class
+////			// Let's get the fields from our class
 //			PrimaryKeyField pk = metaModel.getPrimaryKey();
 //			List<ColumnField> columns = metaModel.getColumns();
 //			List<ForeignKeyField> foreignKeyFields = metaModel.getForeignKeys();
-//
-//			System.out.printf(
+////
+//		System.out.printf(
 //					"\t Found a primary key field named %s, of type %s, which maps to the column with name: %s\n",
 //					pk.getName(), pk.getType(), pk.getColumnName());
-//
-//			// Information about the columns
-//
+////
+////			// Information about the columns
+////
 //			for (ColumnField column : columns) {
 //				System.out.printf(
 //						"\t Found a column field named %s, of type %s, which maps to the column with name: %s\n",
@@ -76,6 +75,7 @@ public class DriverP1Demo {
 //			}
 //
 //			// Information about foreign keys
+//<<<<<<< HEAD
 //			for (ForeignKeyField fk : foreignKeyFields) {
 //				System.out.printf(
 //						"\t Found a foreign column field named %s, of type %s, which maps to the column with name: %s\n",
@@ -97,6 +97,19 @@ public class DriverP1Demo {
 		
 		
 		
+//=======
+//			for (ForeignKeyField fk : foreignKeyFields) {
+//				System.out.printf(
+//						"\t Found a foreign column field named %s, of type %s, which maps to the column with name: %s\n",
+//						fk.getName(), fk.getType(), fk.getColumnName());			
+//			}
+//	}
+//		for(int i = 0; i<DummyUser.class.getFields().length; i++) {
+//		System.out.println("Uhm..." + DummyUser.class.getDeclaredFields().length);
+//		}
+//		System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
+
+//>>>>>>> 4519a321b6b84d30b604c0076ea058121e795354
 	}
 }
 

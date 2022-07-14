@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import com.revature.annotations.Id;
 
 public class PrimaryKeyField {
-private Field field;
+public Field field;
 	
 	public PrimaryKeyField(Field field) {
 		if(field.getAnnotation(Id.class) == null) {

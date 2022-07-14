@@ -1,29 +1,19 @@
 package com.revature.models;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import com.revature.annotations.Column;
+import com.revature.annotations.Entity;
+import com.revature.annotations.Id;
 
 
-@Entity
-@Table(name = "superpowers") // This allows us to provide info about the table, we'll give it a new name
+@Entity(tableName =  "superpowers")
 public class Superpowers {
 	
-	@Id // Id denotes that this column is a primary key
-	@Column(name = "superpower_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // This is going to function as our SERIAL datatype from sql
+	@Id(columnName = "superpower_id") // Id denotes that this column is a primary key
 	private int superpowerId;
 	
-	@Column(name = "superpower_name", unique = true, nullable = false) // This is use adding additional constraints to our column
+	@Column(columnName = "superpower_name") // This is use adding additional constraints to our column
 	private String superpowerName;
 	
 	// This will automatically be created as a column called description

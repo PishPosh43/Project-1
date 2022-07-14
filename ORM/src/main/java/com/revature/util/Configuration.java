@@ -176,7 +176,7 @@ public class Configuration {
 			metaModel.actuallyGetColumns().get(0).getColField().setAccessible(true);
 
 			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
-			int sumOfAllConstructor = metaModel.actuallyGetColumns().size() + 1;
+			//int sumOfAllConstructor = metaModel.actuallyGetColumns().size() + 1;
 			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + "( ";
 
 			for (int i = 0; i < sumOfAllColumns - 1; i++) {
@@ -210,7 +210,7 @@ public class Configuration {
 							(metaModel.getPrimaryKey().getPrimField().get(object)));
 				} else if ((allCols.get(j)).getAnnotation(Column.class) != null) {
 					for (ColumnField col : metaModel.actuallyGetColumns()) {
-						if (j + 1 < metaModel.actuallyGetColumns().size()) {
+						if (j + 1 <= metaModel.actuallyGetColumns().size()) {
 
 							System.out.println(j < metaModel.actuallyGetColumns().size());
 							metaModel.actuallyGetColumns().get(j).getColField().setAccessible(true);
@@ -271,7 +271,7 @@ public class Configuration {
 			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
 
 			Class<?>[] colClass = new Class<?>[sumOfAllColumns];
-			String sql = "SELECT * FROM " + clazz.getAnnotation(Entity.class).;
+			String sql = "SELECT * FROM " + clazz.getAnnotation(Entity.class);
 
 			Statement stmt = cfg.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
@@ -286,14 +286,13 @@ public class Configuration {
 
 					allCols.add(rs.getObject(k));
 					System.out.println(allCols.get(k - 1));
-					// colClass.add(Class.forName(rsMeta.getColumnClassName(k)));
 					colClass[k - 1] = Class.forName(rsMeta.getColumnClassName(k));
 				}
 
 				T classInstance = (T) clazz.getClass().getConstructor(colClass).newInstance();
 				classes.add((Class<?>) classInstance);
 				System.out.println("Out of the loop but still in try block");
-				return classes;
+				return allCols;
 			}
 		} catch (SQLException | IllegalArgumentException | SecurityException | ClassNotFoundException
 				| InstantiationException | IllegalAccessException | InvocationTargetException
@@ -303,7 +302,7 @@ public class Configuration {
 
 		}
 		System.out.println("Did this even work?");
-		return classes;
+		return allCols;
 
 	}
 	// *************************************************************************************************************************************************************

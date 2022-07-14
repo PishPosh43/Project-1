@@ -14,7 +14,7 @@ public class Driver {
 	
 	public static void main(String[] args) {
 		
-		System.out.println("Running our hibernate demo");
+		System.out.println("Running our ORM demo");
 		
 		Superpowers s1 = new Superpowers("Time Manipulation", "The ability to control time.");
 		Superpowers s2 = new Superpowers("Teleportation", "The ability to appear at any location you desire.");
