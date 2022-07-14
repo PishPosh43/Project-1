@@ -14,7 +14,8 @@ public enum SQLDataTypes {
 	BIGINT(Long.class, 6),
 	REAL(Float.class, 7),
 	DOUBLE(Double.class, 8),
-	ARRAY(Array.class, 9);
+	ARRAY(Array.class, 9),
+	SERIAL(Integer.class, 10);
 	;
 	
 

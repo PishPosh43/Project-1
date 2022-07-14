@@ -108,9 +108,17 @@ public class MetaModel<T> {
 		
 	}
 	
+	public List<ColumnField> actuallyGetColumns(){
+		return columnFields;
+	}
 	
+	public PrimaryKeyField actuallyGetPrimaryKey() {
+		return primaryKeyField;
+	}
 	
-	
+	public List<ForeignKeyField> actuallyGetForeignKeys() {
+		return foreignKeyFields;
+	}
 	
 	
 	
