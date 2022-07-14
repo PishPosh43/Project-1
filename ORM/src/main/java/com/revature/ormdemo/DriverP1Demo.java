@@ -3,6 +3,7 @@ package com.revature.ormdemo;
 import java.sql.Connection;
 import java.util.List;
 
+import com.revature.demomodels.DummyOtherClass;
 import com.revature.demomodels.DummyUser;
 import com.revature.util.ColumnField;
 import com.revature.util.Configuration;
@@ -33,13 +34,9 @@ public class DriverP1Demo {
 //				DB_URL=jdbc:postgresql://localhost:5432/Project0 - Test
 //				DB_USERNAME=postgres
 		Configuration cfg = new Configuration();
-		
-		// These set statements are irrelevant
-		/*
-		 * Configuration.setDbUrl(System.getenv("DB_URL"));
-		 * Configuration.setDbUsername(System.getenv("DB_USERNAME"));
-		 * Configuration.setDbPassword(System.getenv("DB_PWORD"));
-		 */
+		Configuration.setDbUrl(System.getenv("DB_URL"));
+		Configuration.setDbUsername(System.getenv("DB_USERNAME"));
+		Configuration.setDbPassword(System.getenv("DB_PWORD"));
 
 		// Step 1 is to add the annotated classes
 
@@ -88,8 +85,18 @@ public class DriverP1Demo {
 		//for(int i = 0; i<DummyUser.class.getFields().length; i++) {
 		//System.out.println("Uhm..." + DummyUser.class.getDeclaredFields().length);
 		//}
-		System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
-
+		//System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
+		DummyOtherClass otherDummy = new DummyOtherClass();
+		
+		DummyUser dUser = new DummyUser(5,"IAmADummy", "Dummyyy", otherDummy);
+		//System.out.println(cfg.insert(dUser.getClass()));
+		
+		System.out.println(cfg.insert(dUser));
+		
+		
+		
+		
+		
 	}
 }
 

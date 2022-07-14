@@ -1,24 +1,25 @@
 package com.revature.util;
 
-<<<<<<< HEAD
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-=======
-import java.io.IOException;
->>>>>>> 44c6244c00c0988861d0c16e6be22bc4d9f1f4ab
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-
+import com.revature.annotations.Column;
+import com.revature.annotations.Entity;
+import com.revature.annotations.Id;
+import com.revature.annotations.JoinColumn;
 
 //******************************************************************************************
 //******************************************************************************************
@@ -26,7 +27,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 public class Configuration {
 
 	private static BasicDataSource ds = new BasicDataSource();
-	public static Connection conn = null;
+	public static Connection conn;
+	private static String dbUrl;
+	private static String dbUsername;
+	private static String dbPassword;
 	private List<MetaModel<Class<?>>> metaModelList;
 
 //******************************************************************************************
@@ -48,13 +52,13 @@ public class Configuration {
 
 //******************************************************************************************	
 
-	public static Connection getConnection() {// (String dbUrl, String dbUsername, String dbPassword) {
+	public Connection getConnection() {// (String dbUrl, String dbUsername, String dbPassword) {
 
+		Connection conn;
 
-		if (conn == null) {
-			Properties props = new Properties();
+		// ENTER CODE & LOGIC HERE
+		// REPLACE NULL AFTER WRITING CODE BODY;
 
-<<<<<<< HEAD
 		// ds.setUrl(Configuration.getDbUrl());
 		ds.setUrl(dbUrl);
 		// ds.setUsername(Configuration.getDbUsername());
@@ -72,53 +76,54 @@ public class Configuration {
 			if (conn != null && !conn.isClosed()) {
 				System.out.println("Returning previously-established connection");
 				return conn;
-=======
-			try {
-				Class.forName("org.postgresql.Driver");
-				props.load(Configuration.class.getClassLoader().getResourceAsStream("connection.properties"));
-
-				// Getting login info from properties file
-				
-				String url = props.getProperty("url");
-				String username = props.getProperty("username");
-				String password = props.getProperty("password");
-				
-				// Connection pooling 
-				ds.setUrl(url);
-				// ds.setUsername(Configuration.getDbUsername());
-				ds.setUsername(username);
-				// ds.setPassword(Configuration.getDbPassword());
-				ds.setPassword(password);
-				ds.setMinIdle(5);
-				ds.setMaxIdle(10);
-				ds.setMaxOpenPreparedStatements(100);
-
-				conn = ds.getConnection();
-				System.out.println("Got connection!");
-
-			} catch (SQLException | IOException | ClassNotFoundException e) {
-				e.printStackTrace();
->>>>>>> 44c6244c00c0988861d0c16e6be22bc4d9f1f4ab
 			}
+		} catch (SQLException e) {
+			System.out.println("Unable to establish a connection");
+			e.printStackTrace();
+			return null;
 		}
 
 		return conn;
 	}
 
-
-	// Main to check connection
-	public static void main(String[] args) {
-		Connection conn1 = getConnection();
-        Connection conn2 = getConnection();
-
-
-        System.out.println(conn1);
-        System.out.println(conn2);
-	}
-
 //******************************************************************************************
 
-	//UNFINISHED - NOT A CRUD METHOD ANYWAY
+	public static String getDbUrl() {
+		return dbUrl;
+	}
+
+//******************************************************************************************	
+
+	public static void setDbUrl(String dbUrl) {
+		Configuration.dbUrl = dbUrl;
+	}
+
+//******************************************************************************************	
+
+	public static String getDbUsername() {
+		return dbUsername;
+	}
+
+//******************************************************************************************	
+
+	public static void setDbUsername(String dbUsername) {
+		Configuration.dbUsername = dbUsername;
+	}
+
+//******************************************************************************************	
+
+	public static String getDbPassword() {
+		return dbPassword;
+	}
+
+//******************************************************************************************	
+
+	public static void setDbPassword(String dbPassword) {
+		Configuration.dbPassword = dbPassword;
+	}
+//******************************************************************************************
+
+	// UNFINISHED - NOT A CRUD METHOD ANYWAY
 //	public <T> void createTable(Class<?> clazz) {
 //		try {
 //			Connection cfg = ds.getConnection();
@@ -154,74 +159,152 @@ public class Configuration {
 //	}
 
 //*************************************************************************************************************************************************************
-	
-	public int insert(Class<?> clazz) {
+
+	public <T> PrimaryKeyField insert(Object object) {
+
+		Class<T> clazz = (Class<T>) object.getClass();
+		MetaModel<T> metaModel = new MetaModel<T>(clazz);
+		MetaModel.of(clazz);
+
+		try {
+			Connection cfg = ds.getConnection();
+			metaModel.getColumns();
+			metaModel.getForeignKeys();
+			metaModel.getPrimaryKey();
+			List<Field> allCols = Arrays.asList(clazz.getDeclaredFields());
+
+			metaModel.actuallyGetColumns().get(0).getColField().setAccessible(true);
+
+			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
+			int sumOfAllConstructor = metaModel.actuallyGetColumns().size() + 1;
+			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + "( ";
+
+			for (int i = 0; i < sumOfAllColumns - 1; i++) {
+				sql = sql.concat("? ,");
+			}
+			
+			sql = sql.concat("?) VALUES ( ");
+
+			for (int i = 0; i < sumOfAllColumns - 1; i++) {
+				sql = sql.concat("? , ");
+			}
+			
+
+			sql = sql.concat("? )");
+			System.out.println(sql);
+			sql = sql.concat(");");
+
+			// PREPARED STATEMENT
+			PreparedStatement stmt = cfg.prepareStatement(sql);
+
+			// RESULT SET
+
+			for (int j = 0; j < sumOfAllColumns; j++) {
+				if (j < sumOfAllColumns) {
+					stmt.setString(j + 1, allCols.get(j).getName());
+				}
+				if ((allCols.get(j)).getAnnotation(Id.class) != null) {
+				
+					metaModel.getPrimaryKey().getPrimField().setAccessible(true);
+					stmt.setObject(j + sumOfAllColumns + 1,
+							(metaModel.getPrimaryKey().getPrimField().get(object)));
+				} else if ((allCols.get(j)).getAnnotation(Column.class) != null) {
+					for (ColumnField col : metaModel.actuallyGetColumns()) {
+						if (j + 1 < metaModel.actuallyGetColumns().size()) {
+
+							System.out.println(j < metaModel.actuallyGetColumns().size());
+							metaModel.actuallyGetColumns().get(j).getColField().setAccessible(true);
+							
+							stmt.setObject(j + sumOfAllColumns + 1,
+									(metaModel.actuallyGetColumns().get(j).getColField().get(object)));
+						}
+					}
+				} else if ((allCols.get(j)).getAnnotation(JoinColumn.class) != null) {
+					for (ForeignKeyField col : metaModel.actuallyGetForeignKeys()) {
+						if (j + 1 < metaModel.actuallyGetForeignKeys().size()) {
+							metaModel.actuallyGetForeignKeys().get(j).getForField().setAccessible(true);
+							// stmt.setString(j + 1, col.getColumnName());
+							stmt.setObject(j + sumOfAllColumns,
+									(metaModel.actuallyGetForeignKeys().get(j).getForField().get(object)));
+						}
+					}
+				}
+			}
+
+			ResultSet rs = stmt.executeQuery();
+			ResultSetMetaData rsMeta = rs.getMetaData();
+			
+			PrimaryKeyField prim;
+			if(rs.next()) {
+				prim = (PrimaryKeyField) rs.getObject(metaModel.actuallyGetPrimaryKey().getName());
+				System.out.println("We returned a primary key: " + prim.getPrimField().get(object));
+				return prim;
+			}
+		} catch (SQLException | IllegalArgumentException | IllegalAccessException e) {
+			System.out.println("Unable to insert!");
+			e.printStackTrace();
+		}
+		return null;
 		
-		
-		
-		
-		
-		return -1;
 	}
 
 //*************************************************************************************************************************************************************		
 
-
 //*************************************************************************************************************************************************************	
 
-	//UNFINISHED
-	public <T> List<Class<?>> getAll(Class<T> clazz) {
 
-		//Class<T> clazz = new Class<T>(null, clazz.class);
+	// UNFINISHED
+	public <T> List<Object> getAll(Class<T> clazz) {
+
 		List<Class<?>> classes = new LinkedList<Class<?>>();
 		List<Object> allCols = new LinkedList<Object>();
 		int i = 1;
-		
+
 		try {
 			Connection cfg = ds.getConnection();
 			MetaModel<T> metaModel = new MetaModel<T>(clazz);
+			
 			metaModel.getColumns();
 			metaModel.getForeignKeys();
 			metaModel.getPrimaryKey();
-			
-			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1
-					+ metaModel.actuallyGetForeignKeys().size();
+
+			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
 
 			Class<?>[] colClass = new Class<?>[sumOfAllColumns];
-			//System.out.println("Number of foreign keys" + metaModel.actuallyGetForeignKeys().size());
-			String sql = "SELECT * FROM users";// metaModel.getSimpleClassName() + ";";
+			String sql = "SELECT * FROM " + clazz.getAnnotation(Entity.class).;
 
 			Statement stmt = cfg.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			ResultSetMetaData rsMeta = rs.getMetaData();
-			
+
 			while (rs.next()) {
-				
+
 				allCols.clear();
 
-				System.out.println("Get the dam name: " + rsMeta.getColumnTypeName(i));
+				
 				for (int k = 1; k <= sumOfAllColumns; k++) {
 
 					allCols.add(rs.getObject(k));
 					System.out.println(allCols.get(k - 1));
-					//colClass.add(Class.forName(rsMeta.getColumnClassName(k)));
-					colClass[k-1] = Class.forName(rsMeta.getColumnClassName(k));
+					// colClass.add(Class.forName(rsMeta.getColumnClassName(k)));
+					colClass[k - 1] = Class.forName(rsMeta.getColumnClassName(k));
 				}
-							
+
 				T classInstance = (T) clazz.getClass().getConstructor(colClass).newInstance();
 				classes.add((Class<?>) classInstance);
-			System.out.println("Out of the loop but still in try block");
-			return classes;
+				System.out.println("Out of the loop but still in try block");
+				return classes;
 			}
-		} catch (SQLException | IllegalArgumentException
-				| SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+		} catch (SQLException | IllegalArgumentException | SecurityException | ClassNotFoundException
+				| InstantiationException | IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException e) {
 			System.out.println("Unable to get information!");
 			e.printStackTrace();
 
 		}
 		System.out.println("Did this even work?");
 		return classes;
-	
+
 	}
 	// *************************************************************************************************************************************************************
 

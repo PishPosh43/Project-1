@@ -37,5 +37,8 @@ private Field field;
 		}
 	}
 	
+	public Field getColField() {
+		return field;
+	}
 	
 }
