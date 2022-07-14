@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.annotations.Id;
 import com.revature.transaction.Transaction;
 import com.revature.util.MetaModel;
+import com.revature.util.PrimaryKeyField;
 
 
 public class Session<T> {
@@ -40,23 +42,19 @@ public class Session<T> {
 	
 	
 	//create list if none is available or add model to list
-	public void save(Object o) { 
+	public int save(Object o) { 
+		int pkey = 0;
 		Class<?> clazz = o.getClass();
         for (MetaModel<?> model : metaModelList) {
+        		pkey = Integer.valueOf((model.actuallyGetPrimaryKey().field.getAnnotation(Id.class).columnName()));
             if (model.getClassName().equals(clazz.getName())) {
             	metaModelList.add((MetaModel<Class<?>>) o);
             }
-		
+        }
+        return pkey;
 	}
 	
 	
-    //private void createTables() {
-      // Implement when createTables method is finished
-    	
-   // }
-    
-  
-	}
 	
 	
 
