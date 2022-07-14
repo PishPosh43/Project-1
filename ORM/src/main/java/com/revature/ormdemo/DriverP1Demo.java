@@ -33,9 +33,13 @@ public class DriverP1Demo {
 //				DB_URL=jdbc:postgresql://localhost:5432/Project0 - Test
 //				DB_USERNAME=postgres
 		Configuration cfg = new Configuration();
-		Configuration.setDbUrl(System.getenv("DB_URL"));
-		Configuration.setDbUsername(System.getenv("DB_USERNAME"));
-		Configuration.setDbPassword(System.getenv("DB_PWORD"));
+		
+		// These set statements are irrelevant
+		/*
+		 * Configuration.setDbUrl(System.getenv("DB_URL"));
+		 * Configuration.setDbUsername(System.getenv("DB_USERNAME"));
+		 * Configuration.setDbPassword(System.getenv("DB_PWORD"));
+		 */
 
 		// Step 1 is to add the annotated classes
 
