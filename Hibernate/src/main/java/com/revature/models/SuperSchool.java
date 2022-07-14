@@ -3,33 +3,25 @@ package com.revature.models;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import com.revature.annotations.Column;
+import com.revature.annotations.Entity;
+import com.revature.annotations.Id;
+import com.revature.annotations.JoinColumn;
 
-@Entity
-@Table(name = "super_school")
+@Entity(tableName = "super_school")
 public class SuperSchool {
 	
-	@Id
-	@Column(name = "ss_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id(columnName = "school_id")
 	private int ssId;
 	
-	@Column(name = "ss_name")
+	@Column(columnName = "school_name")
 	private String name;
 	
 	private String location;
 	
 	// We want to map a superhero to our super chool's primary key
 	// so we need to set up a many to one relationship between super heros and our super schools
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Cascade defines the interactions between entities)
+	@JoinColumn(columnName = "superhero")
 	private List<Superhero> superheroList;
 
 	public SuperSchool(String name, String location) {
