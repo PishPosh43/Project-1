@@ -34,6 +34,16 @@ public class DummyUser {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+	
+	
+
+	public DummyUser(int id, String firstName, String lastName, DummyOtherClass testRelation) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.testRelation = testRelation;
+	}
 
 	public DummyUser(String firstName, String lastName) {
 		super();

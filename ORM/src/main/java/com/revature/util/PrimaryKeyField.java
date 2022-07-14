@@ -27,5 +27,10 @@ public Field field;
 		return field.getAnnotation(Id.class).columnName();
 	}
 	
+	public Field getPrimField() {
+		return field;
+	}
+	
+	
 	
 }

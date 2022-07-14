@@ -87,8 +87,11 @@ public class MetaModel<T> {
 		for(Field field: fields) {
 			Id primaryKey = field.getAnnotation(Id.class);
 			if( primaryKey != null) {
-				return new PrimaryKeyField(field);
+				PrimaryKeyField prim = new PrimaryKeyField(field);
+			prim.getPrimField().setAccessible(true);
+			return prim;
 			}
+			
 		}
 		
 		throw new RuntimeException("Did not find a field annotated with @Id in class: " + clazz.getName());
@@ -119,25 +122,6 @@ public class MetaModel<T> {
 	public List<ForeignKeyField> actuallyGetForeignKeys() {
 		return foreignKeyFields;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

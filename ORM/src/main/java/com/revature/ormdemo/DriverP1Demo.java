@@ -3,6 +3,7 @@ package com.revature.ormdemo;
 import java.sql.Connection;
 import java.util.List;
 
+import com.revature.demomodels.DummyOtherClass;
 import com.revature.demomodels.DummyUser;
 import com.revature.util.ColumnField;
 import com.revature.util.Configuration;
@@ -29,8 +30,14 @@ public class DriverP1Demo {
 
 		
 		Configuration cfg = new Configuration();
-		
-		
+//<<<<<<< HEAD
+		Configuration.setDbUrl(System.getenv("DB_URL"));
+		Configuration.setDbUsername(System.getenv("DB_USERNAME"));
+		Configuration.setDbPassword(System.getenv("DB_PWORD"));
+//=======
+//		
+//		
+//>>>>>>> 4519a321b6b84d30b604c0076ea058121e795354
 
 		// Step 1 is to add the annotated classes
 
@@ -47,38 +54,62 @@ public class DriverP1Demo {
 		// We'll iterate over each class that's added and provide some info about the
 		// class
 
-		for (MetaModel<?> metaModel : cfg.getMetaModels()) {
-
-			System.out.printf("Printing Metamodel for class: %s\n", metaModel.getClassName());
-//			// Let's get the fields from our class
-			PrimaryKeyField pk = metaModel.getPrimaryKey();
-			List<ColumnField> columns = metaModel.getColumns();
-			List<ForeignKeyField> foreignKeyFields = metaModel.getForeignKeys();
+//		for (MetaModel<?> metaModel : cfg.getMetaModels()) {
 //
-		System.out.printf(
-					"\t Found a primary key field named %s, of type %s, which maps to the column with name: %s\n",
-					pk.getName(), pk.getType(), pk.getColumnName());
-//
-//			// Information about the columns
-//
-			for (ColumnField column : columns) {
-				System.out.printf(
-						"\t Found a column field named %s, of type %s, which maps to the column with name: %s\n",
-						column.getName(), column.getType(), column.getColumnName());
-			}
+//			System.out.printf("Printing Metamodel for class: %s\n", metaModel.getClassName());
+////			// Let's get the fields from our class
+//			PrimaryKeyField pk = metaModel.getPrimaryKey();
+//			List<ColumnField> columns = metaModel.getColumns();
+//			List<ForeignKeyField> foreignKeyFields = metaModel.getForeignKeys();
+////
+//		System.out.printf(
+//					"\t Found a primary key field named %s, of type %s, which maps to the column with name: %s\n",
+//					pk.getName(), pk.getType(), pk.getColumnName());
+////
+////			// Information about the columns
+////
+//			for (ColumnField column : columns) {
+//				System.out.printf(
+//						"\t Found a column field named %s, of type %s, which maps to the column with name: %s\n",
+//						column.getName(), column.getType(), column.getColumnName());
+//			}
 //
 //			// Information about foreign keys
-			for (ForeignKeyField fk : foreignKeyFields) {
-				System.out.printf(
-						"\t Found a foreign column field named %s, of type %s, which maps to the column with name: %s\n",
-						fk.getName(), fk.getType(), fk.getColumnName());			
-			}
-	}
-		for(int i = 0; i<DummyUser.class.getFields().length; i++) {
-		System.out.println("Uhm..." + DummyUser.class.getDeclaredFields().length);
-		}
-		System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
+//<<<<<<< HEAD
+//			for (ForeignKeyField fk : foreignKeyFields) {
+//				System.out.printf(
+//						"\t Found a foreign column field named %s, of type %s, which maps to the column with name: %s\n",
+//						fk.getName(), fk.getType(), fk.getColumnName());			
+//			}
+//	}
+		//for(int i = 0; i<DummyUser.class.getFields().length; i++) {
+		//System.out.println("Uhm..." + DummyUser.class.getDeclaredFields().length);
+		//}
+		//System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
+		DummyOtherClass otherDummy = new DummyOtherClass();
+		
+		DummyUser dUser = new DummyUser(5,"IAmADummy", "Dummyyy", otherDummy);
+		//System.out.println(cfg.insert(dUser.getClass()));
+		
+		System.out.println(cfg.insert(dUser));
+		
+		
+		
+		
+		
+//=======
+//			for (ForeignKeyField fk : foreignKeyFields) {
+//				System.out.printf(
+//						"\t Found a foreign column field named %s, of type %s, which maps to the column with name: %s\n",
+//						fk.getName(), fk.getType(), fk.getColumnName());			
+//			}
+//	}
+//		for(int i = 0; i<DummyUser.class.getFields().length; i++) {
+//		System.out.println("Uhm..." + DummyUser.class.getDeclaredFields().length);
+//		}
+//		System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
 
+//>>>>>>> 4519a321b6b84d30b604c0076ea058121e795354
 	}
 }
 

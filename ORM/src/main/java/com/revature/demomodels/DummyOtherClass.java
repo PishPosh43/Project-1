@@ -19,6 +19,10 @@ public class DummyOtherClass {
 		this.testField1 = testField1;
 	}
 
+	public DummyOtherClass() {
+		super();
+	}
+
 	public int getTestId() {
 		return testId;
 	}

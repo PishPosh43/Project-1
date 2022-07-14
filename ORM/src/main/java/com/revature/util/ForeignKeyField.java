@@ -30,4 +30,8 @@ public class ForeignKeyField {
 		return field.getAnnotation(JoinColumn.class).columnName();
 	}
 	
+	public Field getForField() {
+		return field;
+	}
+	
 }
