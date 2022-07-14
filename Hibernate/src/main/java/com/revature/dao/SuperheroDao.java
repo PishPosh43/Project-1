@@ -2,19 +2,12 @@ package com.revature.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import com.revature.models.Superhero;
-import com.revature.util.HibernateUtil;
+import com.revature.session.Session;
+import com.revature.session.SessionManager;
+import com.revature.util.Configuration;
 
-/*
- * 3 different ways to write complex queries
- * 
- * HQL - Hibernate Query Language
- * Criteria API
- * Native SQL
- */
+
 
 public class SuperheroDao {
 
@@ -23,7 +16,13 @@ public class SuperheroDao {
 
 	public int insert(Superhero sHero) {
 		// Capture the session
-		Session session = HibernateUtil.getSession();
+		Session session;
+		try {
+			session = SessionManager.openSession();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// Start transaction
 		Transaction tx = session.beginTransaction();
