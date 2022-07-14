@@ -6,11 +6,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.transaction.Transaction;
 import com.revature.util.MetaModel;
 
 
 public class Session<T> {
 	Connection con;
+	private Transaction currentTransaction;
+	
+	
 	private List<MetaModel<Class<?>>> metaModelList; // list is used to store and cache metamodels
 	private MetaModel<T> model;
 	
@@ -24,6 +28,14 @@ public class Session<T> {
 	public Session(Connection con) {
 		this.con = con;
 		
+	}
+	
+	public Transaction beginTransaction() {
+		if (currentTransaction == null) {
+			currentTransaction = new Transaction(con);
+			currentTransaction.setAutoCommit(false);
+		}
+		return currentTransaction;
 	}
 	
 	
@@ -45,6 +57,8 @@ public class Session<T> {
     
   
 	}
+	
+	
 
 	public void rollback() {
 		this.metaModelList = null;

@@ -9,12 +9,18 @@ import com.revature.util.Configuration;
 
 public class Transaction {
 	private Connection conn;
+	
+	
 
 	public Transaction(Connection conn) {
 		this.conn = conn;
 
 	}
 
+	public void beginTransaction()throws SQLException{
+		 conn.beginRequest();
+		 
+	}
 	
 	public void commit() {
 
@@ -34,6 +40,17 @@ public class Transaction {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void setSavepoint()throws SQLException{
+		
+		 conn.setSavepoint();
+		 
+	}
+	
+	public void deleteSavepoint(Savepoint s)throws SQLException{
+		 conn.releaseSavepoint(s);
+		 
 	}
 
 
