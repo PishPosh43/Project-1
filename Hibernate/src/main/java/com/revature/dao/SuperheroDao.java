@@ -18,7 +18,7 @@ public class SuperheroDao {
 
 	public int insert(Superhero sHero) {
 		// Capture the session
-		Session session;
+		Session session = null;
 		try {
 			session = SessionManager.openSession();
 		} catch (Exception e) {
@@ -30,7 +30,8 @@ public class SuperheroDao {
 		Transaction tx = session.beginTransaction();
 
 		// Transact with the data base and save pk as int
-		int pk = (int) session.save(sHero);
+		
+		int pk = session.save(sHero);
 
 		// Commit changes
 		tx.commit();
@@ -43,7 +44,7 @@ public class SuperheroDao {
 	public List<Superhero> selectAll(){
 		
 		// First thing is to capture a session
-		Session ses = O.getSession();
+		Session ses = SessionManager.openSession();
 		
 		// We'll use some HQL which is basically a combo of SQL and OOP to query
 		List<Superhero> heroList = ses.createQuery("from Superhero", Superhero.class).list();
@@ -56,7 +57,7 @@ public class SuperheroDao {
 	// Let's do a select by name
 	public Superhero selectByName(String name) {
 		
-		Session ses = Configuration.getConnection();
+		Session ses = SessionManager.openSession();
 		
 		// HQL Version
 		// Select * from superHero where name = 'name'
@@ -75,7 +76,7 @@ public class SuperheroDao {
 	// An update method so we can see what this looks like
 	public void update(Superhero sHero) {
 		// Capture the session
-		Session session = HibernateUtil.getSession();
+		Session session = SessionManager.openSession();
 
 		// Start transaction
 		Transaction tx = session.beginTransaction();
