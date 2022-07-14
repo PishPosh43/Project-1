@@ -5,7 +5,9 @@ import java.util.List;
 import com.revature.models.Superhero;
 import com.revature.session.Session;
 import com.revature.session.SessionManager;
+import com.revature.transaction.Transaction;
 import com.revature.util.Configuration;
+import com.revature.util.ORMUtil;
 
 
 
@@ -41,7 +43,7 @@ public class SuperheroDao {
 	public List<Superhero> selectAll(){
 		
 		// First thing is to capture a session
-		Session ses = HibernateUtil.getSession();
+		Session ses = O.getSession();
 		
 		// We'll use some HQL which is basically a combo of SQL and OOP to query
 		List<Superhero> heroList = ses.createQuery("from Superhero", Superhero.class).list();
@@ -54,7 +56,7 @@ public class SuperheroDao {
 	// Let's do a select by name
 	public Superhero selectByName(String name) {
 		
-		Session ses = HibernateUtil.getSession();
+		Session ses = Configuration.getConnection();
 		
 		// HQL Version
 		// Select * from superHero where name = 'name'
