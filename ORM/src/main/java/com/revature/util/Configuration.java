@@ -1,10 +1,10 @@
 package com.revature.util;
 
-<<<<<<< HEAD
+
 import java.lang.reflect.InvocationTargetException;
-=======
+
 import java.io.IOException;
->>>>>>> 44c6244c00c0988861d0c16e6be22bc4d9f1f4ab
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,25 +54,6 @@ public class Configuration {
 		if (conn == null) {
 			Properties props = new Properties();
 
-<<<<<<< HEAD
-		// ds.setUrl(Configuration.getDbUrl());
-		ds.setUrl(dbUrl);
-		// ds.setUsername(Configuration.getDbUsername());
-		ds.setUsername(dbUsername);
-		// ds.setPassword(Configuration.getDbPassword());
-		ds.setPassword(dbPassword);
-		ds.setDefaultSchema("p1testschema");
-		ds.getDefaultSchema();
-		ds.setMinIdle(5);
-		ds.setMaxIdle(10);
-		ds.setMaxOpenPreparedStatements(100);
-		try {
-			conn = ds.getConnection();
-
-			if (conn != null && !conn.isClosed()) {
-				System.out.println("Returning previously-established connection");
-				return conn;
-=======
 			try {
 				Class.forName("org.postgresql.Driver");
 				props.load(Configuration.class.getClassLoader().getResourceAsStream("connection.properties"));
@@ -98,23 +79,27 @@ public class Configuration {
 
 			} catch (SQLException | IOException | ClassNotFoundException e) {
 				e.printStackTrace();
->>>>>>> 44c6244c00c0988861d0c16e6be22bc4d9f1f4ab
 			}
 		}
 
 		return conn;
 	}
+	
+	
+		
 
 
 	// Main to check connection
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		Connection conn1 = getConnection();
         Connection conn2 = getConnection();
 
 
         System.out.println(conn1);
         System.out.println(conn2);
+        
 	}
+
 
 //******************************************************************************************
 
