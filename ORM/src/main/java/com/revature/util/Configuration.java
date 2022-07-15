@@ -216,7 +216,7 @@ public class Configuration {
 		// Using String Builder cause apparently String just ain't it
 		StringBuilder sql_sb = new StringBuilder();
 		sql_sb.append("DELETE FROM " + cla.getAnnotation(Entity.class).tableName() + " WHERE " + objPkField.getPrimField().getAnnotation(Id.class).columnName() + " = " + PKValue);
-		System.out.println(sql_sb);
+		//System.out.println(sql_sb);
 		try (Connection conn = ds.getConnection()) {
 
 			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
@@ -349,7 +349,7 @@ public class Configuration {
 		sql_sb.append(" WHERE "+thePKofObj.getPrimField().getAnnotation(Id.class).columnName()+" = "+PK_value);
 		 
 		try (Connection conn = ds.getConnection()) {
-			System.out.println(sql_sb);
+			//System.out.println(sql_sb);
 			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
 			st.executeUpdate();
 		} catch (SQLException e) {
@@ -392,7 +392,7 @@ public class Configuration {
 		// StringBuilder again
 		StringBuilder sql_sb = new StringBuilder();
 		sql_sb.append("SELECT * FROM " + clays.getAnnotation(Entity.class).tableName() + " WHERE " + objPkField.getPrimField().getAnnotation(Id.class).columnName() + " = " + PKValue + ";");
-		System.out.println(sql_sb);
+		//System.out.println(sql_sb);
 		try (Connection conn = ds.getConnection()) {
 
 			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
@@ -404,12 +404,13 @@ public class Configuration {
 			int columnsNumber = rsmd.getColumnCount();
 			while (rs.next()) {
 				System.out.println(
-						"\n====== " + rsmd.getTableName(1) + " with ID of " + rs.getObject(1).toString() + " ======");
+						"Now reading out " + rsmd.getTableName(1) + " with ID of " + rs.getObject(1).toString());
 				for (int i = 1; i <= columnsNumber; i++) {
 					String columnValue = rs.getObject(i).toString();
-					System.out.print(rsmd.getColumnName(i) + " => " + columnValue + "\n");
+					System.out.print(rsmd.getColumnName(i) + ": " + columnValue + "\n");
+					System.out.println("*************************************************");
 				}
-				System.out.println("===========================================");
+				System.out.println("Finished reading from table: " + rsmd.getTableName(1));
 			}
 
 		} catch (SQLException e) {
@@ -418,7 +419,5 @@ public class Configuration {
 		}
 
 	}
-	
-	
 	
 }

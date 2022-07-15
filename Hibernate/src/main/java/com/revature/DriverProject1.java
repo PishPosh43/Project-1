@@ -25,8 +25,7 @@ public class DriverProject1 {
 		DummyUser dUser = new DummyUser(10, "dUser", "One");
 		DummyUser dUser2 = new DummyUser(11, "dUser2", "Two");
 		DummyUser dUser3 = new DummyUser(13, "dUser3", "Three");
-	dUser.setFirstName("CHANGE");
-	cfg.update(dUser3);
+
 		// cfg.insert(dUser2);
 
 		Scanner scan = new Scanner(System.in);
@@ -41,22 +40,32 @@ public class DriverProject1 {
 		System.out.println("Update user (Change dUser3's first name): Press 4");
 		System.out.println("======================");
 		System.out.println();
-		int s = scan.nextInt();
 
-		if (s == 1) {
-			cfg.insert(dUser3);
-		} else if (s == 2) {
-			cfg.read(dUser3);
+		while (i < 20) {
+			if(i>0) {System.out.println("======================");
+			System.out.println("Insert user dUser3: Press 1");
+			System.out.println("Retrieve information about a dUser2: Press 2");
+			System.out.println("Delete user: Press 3");
+			System.out.println("Update user (Change dUser3's first name): Press 4");
+			System.out.println("======================");
+			System.out.println();
+			}
+			int s = scan.nextInt();
+			if (s == 1) {
+				cfg.insert(dUser3);
+			} else if (s == 2) {
+				cfg.read(dUser3);
 
-		} else if (s == 3) {
-			cfg.delete(dUser3);
-		} else if (s == 4) {
-			
-			System.out.println("Enter a new first name: " );
-			String changeFName = scan.next();
-		
-			cfg.update(dUser3);
+			} else if (s == 3) {
+				cfg.delete(dUser3);
+			} else if (s == 4) {
+
+				System.out.println("Enter a new first name: ");
+				String changeFName = scan.next();
+				dUser3.setFirstName(changeFName);
+				cfg.update(dUser3);
+			}
+			i++;
 		}
-
 	}
 }
