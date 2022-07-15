@@ -25,15 +25,17 @@ public class DriverProject1 {
 		DummyUser dUser = new DummyUser(10, "dUser", "One");
 		DummyUser dUser2 = new DummyUser(11, "dUser2", "Two");
 		DummyUser dUser3 = new DummyUser(13, "dUser3", "Three");
+		DummyUser dUser4 = new DummyUser(15, "dUser4", "Five");
 		dUser3.setFirstName("myLastName");
 		
 		//cfg.insert(dUser2);
 		//cfg.insert(dUser3);
+		cfg.insert(dUser4);
 		
 		
 		//cfg.read(dUser);
 		
-		cfg.delete(dUser3);
+		//cfg.delete(dUser3);
 		
 		//cfg.update(dUser3);
 		

@@ -12,9 +12,10 @@ public class SessionManager {
 		this.cfg = cfg;
 	}
 		
-	public static Session openSession() {
-		return new Session(Configuration.getConnection());
-	}
+	/*
+	 * public static Session openSession() { return new
+	 * Session(Configuration.getConnection()); }
+	 */
 	
 	public Session closeSession() {
 		return null;
