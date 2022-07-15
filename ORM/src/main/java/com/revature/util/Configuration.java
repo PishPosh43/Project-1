@@ -160,8 +160,109 @@ public class Configuration {
 
 //*************************************************************************************************************************************************************
 
-	public <T> PrimaryKeyField insert(Object object) {
+//	public <T> PrimaryKeyField insert(Object object) {
+//
+//		Class<T> clazz = (Class<T>) object.getClass();
+//		MetaModel<T> metaModel = new MetaModel<T>(clazz);
+//		MetaModel.of(clazz);
+//
+//		try {
+//			Connection cfg = ds.getConnection();
+//			metaModel.getColumns();
+//			metaModel.getForeignKeys();
+//			metaModel.getPrimaryKey();
+//			List<Field> allCols = Arrays.asList(clazz.getDeclaredFields());
+//
+//			metaModel.actuallyGetColumns().get(0).getColField().setAccessible(true);
+//
+//			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
+//			// int sumOfAllConstructor = metaModel.actuallyGetColumns().size() + 1;
+//			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + "( ";
+//
+//			System.out.println(Types.JAVA_OBJECT);
+//
+//			for (int i = 0; i < sumOfAllColumns - 1; i++) {
+//				sql = sql.concat("? ,");
+//			}
+//
+//			sql = sql.concat("?) VALUES ( ");
+//
+//			for (int i = 0; i < sumOfAllColumns - 1; i++) {
+//				sql = sql.concat("? , ");
+//			}
+//
+//			sql = sql.concat("? )");
+//			System.out.println(sql);
+//			sql = sql.concat(");");
+//
+//			// PREPARED STATEMENT
+//			PreparedStatement stmt = cfg.prepareStatement(sql);
+//
+//			// RESULT SET
+//
+//			for (int j = 0; j < sumOfAllColumns; j++) {
+//				if (j < sumOfAllColumns) {
+//					allCols.get(j).setAccessible(true);
+//					stmt.setObject(j + 1, (Object)allCols.get(j).toString());
+//							
+//					System.out.println(allCols.get(j).get(object));
+//				}
+//				if ((allCols.get(j)).getAnnotation(Id.class) != null) {
+//
+//					metaModel.getPrimaryKey().getPrimField().setAccessible(true);
+//					stmt.setObject(j + sumOfAllColumns + 1, (metaModel.getPrimaryKey().getPrimField().get(object)));
+//
+//					
+//					
+//				} else if ((allCols.get(j)).getAnnotation(Column.class) != null) {
+//					//int ind = 0;
+//					for (ColumnField col : metaModel.actuallyGetColumns()) {
+//
+//						metaModel.actuallyGetColumns().get(j-1).getColField().setAccessible(true);
+//
+//						//System.out.println(ind);
+//						stmt.setObject(j + sumOfAllColumns + 1,
+//								(metaModel.actuallyGetColumns().get(j-1).getColField().get(object)));
+//						//System.out.println(
+//								//"Col object: " + metaModel.actuallyGetColumns().get(ind).getColField().get(object));
+//						System.out.println(stmt);
+//						//ind++;
+//					}
+//				} else if ((allCols.get(j)).getAnnotation(JoinColumn.class) != null) {
+//					int ind = 0;
+//					for (ForeignKeyField col : metaModel.actuallyGetForeignKeys()) {
+//						
+//						System.out.println(j);
+//						metaModel.actuallyGetForeignKeys().get(ind).getForField().setAccessible(true);
+//						stmt.setObject(j + sumOfAllColumns+1,
+//								(metaModel.actuallyGetForeignKeys().get(ind).getForField().get(object)), Types.OTHER );
+//System.out.println(metaModel.actuallyGetForeignKeys().get(ind).getForField().get(object));
+//						ind ++;
+//					}
+//				}
+//				System.out.println(stmt);
+//			}
+//
+//			ResultSet rs = stmt.executeQuery();
+//			ResultSetMetaData rsMeta = rs.getMetaData();
+//
+//			PrimaryKeyField prim;
+//			if (rs.next()) {
+//				prim = (PrimaryKeyField) rs.getObject(metaModel.actuallyGetPrimaryKey().getName());
+//				System.out.println("We returned a primary key: " + prim.getPrimField().get(object));
+//				return prim;
+//			}
+//		} catch (SQLException | IllegalArgumentException | IllegalAccessException e) {
+//			System.out.println("Unable to insert!");
+//			e.printStackTrace();
+//		}
+//		return null;
+//
+//	}
 
+//*************************************************************************************************************************************************************		
+
+	public <T> int insert(Object object) {
 		Class<T> clazz = (Class<T>) object.getClass();
 		MetaModel<T> metaModel = new MetaModel<T>(clazz);
 		MetaModel.of(clazz);
@@ -171,87 +272,58 @@ public class Configuration {
 			metaModel.getColumns();
 			metaModel.getForeignKeys();
 			metaModel.getPrimaryKey();
-			List<Field> allCols = Arrays.asList(clazz.getDeclaredFields());
-
-			metaModel.actuallyGetColumns().get(0).getColField().setAccessible(true);
 
 			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
-			//int sumOfAllConstructor = metaModel.actuallyGetColumns().size() + 1;
-			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + "( ";
-
-			for (int i = 0; i < sumOfAllColumns - 1; i++) {
-				sql = sql.concat("? ,");
+			List<Field> allCols = Arrays.asList(clazz.getDeclaredFields());
+			List<Object> obList = new LinkedList<Object>();
+			
+			for(int i = 0; i<allCols.size();i++) {
+				allCols.get(i).setAccessible(true);
+				obList.add(allCols.get(i).get(object));
 			}
 			
-			sql = sql.concat("?) VALUES ( ");
-
-			for (int i = 0; i < sumOfAllColumns - 1; i++) {
-				sql = sql.concat("? , ");
-			}
 			
-
-			sql = sql.concat("? )");
-			System.out.println(sql);
+			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + " VALUES( ";
+			for (int i = 0; i < allCols.size(); i++) {
+				if(obList.get(i).getClass() == String.class) {
+				sql = sql.concat("'" + obList.get(i).toString()+"'");
+				}
+				else {
+					sql = sql.concat(obList.get(i).toString());
+				}
+				if(i<allCols.size()-1){
+				sql = sql.concat(", ");
+			}
+			}
 			sql = sql.concat(");");
-
-			// PREPARED STATEMENT
-			PreparedStatement stmt = cfg.prepareStatement(sql);
-
-			// RESULT SET
-
-			for (int j = 0; j < sumOfAllColumns; j++) {
-				if (j < sumOfAllColumns) {
-					stmt.setString(j + 1, allCols.get(j).getName());
-				}
-				if ((allCols.get(j)).getAnnotation(Id.class) != null) {
-				
-					metaModel.getPrimaryKey().getPrimField().setAccessible(true);
-					stmt.setObject(j + sumOfAllColumns + 1,
-							(metaModel.getPrimaryKey().getPrimField().get(object)));
-				} else if ((allCols.get(j)).getAnnotation(Column.class) != null) {
-					for (ColumnField col : metaModel.actuallyGetColumns()) {
-						if (j + 1 <= metaModel.actuallyGetColumns().size()) {
-
-							System.out.println(j < metaModel.actuallyGetColumns().size());
-							metaModel.actuallyGetColumns().get(j).getColField().setAccessible(true);
-							
-							stmt.setObject(j + sumOfAllColumns + 1,
-									(metaModel.actuallyGetColumns().get(j).getColField().get(object)));
-						}
-					}
-				} else if ((allCols.get(j)).getAnnotation(JoinColumn.class) != null) {
-					for (ForeignKeyField col : metaModel.actuallyGetForeignKeys()) {
-						if (j + 1 < metaModel.actuallyGetForeignKeys().size()) {
-							metaModel.actuallyGetForeignKeys().get(j).getForField().setAccessible(true);
-							// stmt.setString(j + 1, col.getColumnName());
-							stmt.setObject(j + sumOfAllColumns,
-									(metaModel.actuallyGetForeignKeys().get(j).getForField().get(object)));
-						}
-					}
-				}
-			}
-
-			ResultSet rs = stmt.executeQuery();
-			ResultSetMetaData rsMeta = rs.getMetaData();
+			System.out.println(sql);
 			
-			PrimaryKeyField prim;
-			if(rs.next()) {
-				prim = (PrimaryKeyField) rs.getObject(metaModel.actuallyGetPrimaryKey().getName());
-				System.out.println("We returned a primary key: " + prim.getPrimField().get(object));
-				return prim;
+			
+			Statement stmt = cfg.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			obList.clear();
+			while(rs.next()) {
+				int j = 0;
+				
+				Object obj = rs.getObject(j+1);
+				obList.add(obj);
+				
+				if(allCols.get(j) == metaModel.actuallyGetPrimaryKey().getPrimField()){
+					return (int)allCols.get(j).get(object);
+				}
 			}
-		} catch (SQLException | IllegalArgumentException | IllegalAccessException e) {
-			System.out.println("Unable to insert!");
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println("Unsuccessfull");
 			e.printStackTrace();
 		}
-		return null;
-		
+		return -1;
 	}
 
-//*************************************************************************************************************************************************************		
-
 //*************************************************************************************************************************************************************	
-
 
 	// UNFINISHED
 	public <T> List<Object> getAll(Class<T> clazz) {
@@ -263,7 +335,7 @@ public class Configuration {
 		try {
 			Connection cfg = ds.getConnection();
 			MetaModel<T> metaModel = new MetaModel<T>(clazz);
-			
+
 			metaModel.getColumns();
 			metaModel.getForeignKeys();
 			metaModel.getPrimaryKey();
@@ -281,7 +353,6 @@ public class Configuration {
 
 				allCols.clear();
 
-				
 				for (int k = 1; k <= sumOfAllColumns; k++) {
 
 					allCols.add(rs.getObject(k));

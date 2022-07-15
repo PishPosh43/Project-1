@@ -86,9 +86,10 @@ public class DriverP1Demo {
 		//System.out.println("Uhm..." + DummyUser.class.getDeclaredFields().length);
 		//}
 		//System.out.println("Testing method in main: " + cfg.getAll(DummyUser.class));
-		DummyOtherClass otherDummy = new DummyOtherClass();
+		DummyOtherClass otherDummy = new DummyOtherClass(5, "testerinog");
 		
-		DummyUser dUser = new DummyUser(5,"IAmADummy", "Dummyyy", otherDummy);
+		
+		DummyUser dUser = new DummyUser(9, "IAmADummy", "Dummyyy");
 		//System.out.println(cfg.insert(dUser.getClass()));
 		
 		System.out.println(cfg.insert(dUser));

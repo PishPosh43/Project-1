@@ -1,10 +1,12 @@
 package com.revature.util;
 
 import java.lang.reflect.Field;
+import java.sql.SQLType;
 
 import com.revature.annotations.Column;
 import com.revature.annotations.Id;
 import com.revature.annotations.JoinColumn;
+import com.revature.demomodels.SQLDataTypes;
 
 public class ForeignKeyField {
 	
@@ -33,5 +35,10 @@ public class ForeignKeyField {
 	public Field getForField() {
 		return field;
 	}
+	
+	public SQLType getSqlType() {
+		
+	}
+	
 	
 }
