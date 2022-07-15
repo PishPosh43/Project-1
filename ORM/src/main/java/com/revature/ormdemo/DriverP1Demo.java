@@ -89,10 +89,11 @@ public class DriverP1Demo {
 		DummyOtherClass otherDummy = new DummyOtherClass(5, "testerinog");
 		
 		
-		DummyUser dUser = new DummyUser(9, "IAmADummy", "Dummyyy");
+		DummyUser dUser = new DummyUser(10, "IAmADummyyyyy", "Dummyyy");
 		//System.out.println(cfg.insert(dUser.getClass()));
 		
-		System.out.println(cfg.insert(dUser));
+		//System.out.println(cfg.insert(dUser));
+		cfg.Read(dUser);
 		
 		
 		
