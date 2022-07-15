@@ -1,4 +1,4 @@
-package com.revature.demomodels;
+package com.revature.models;
 
 import com.revature.annotations.Column;
 import com.revature.annotations.Entity;
@@ -42,3 +42,4 @@ public class DummyOtherClass {
 	
 
 }
+

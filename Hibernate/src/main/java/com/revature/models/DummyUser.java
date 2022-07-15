@@ -1,4 +1,4 @@
-package com.revature.demomodels;
+package com.revature.models;
 
 import java.util.Objects;
 
@@ -19,11 +19,8 @@ public class DummyUser {
 	@Column(columnName = "last_name")
 	private String lastName;
 
-	// Below is an example of how you might define a property that serves as a
-	// foreign key
-//	@JoinColumn(columnName = "test_relation")
-//	private DummyOtherClass testRelation;
-	@JoinColumn(columnName = "test_relation")
+	
+	@JoinColumn(columnName = "number")
 	private int number;
 
 	public DummyUser() {

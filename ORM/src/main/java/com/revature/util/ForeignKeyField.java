@@ -36,9 +36,5 @@ public class ForeignKeyField {
 		return field;
 	}
 	
-	public SQLType getSqlType() {
-		
-	}
-	
 	
 }
