@@ -352,6 +352,7 @@ public class Configuration {
 			System.out.println(sql_sb);
 			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
 			st.executeUpdate();
+			System.out.println("Successfully updated table!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -404,12 +405,13 @@ public class Configuration {
 			int columnsNumber = rsmd.getColumnCount();
 			while (rs.next()) {
 				System.out.println(
-						"\n====== " + rsmd.getTableName(1) + " with ID of " + rs.getObject(1).toString() + " ======");
+						"Now reading out " + rsmd.getTableName(1) + " with ID of " + rs.getObject(1).toString());
 				for (int i = 1; i <= columnsNumber; i++) {
 					String columnValue = rs.getObject(i).toString();
-					System.out.print(rsmd.getColumnName(i) + " => " + columnValue + "\n");
+					System.out.print(rsmd.getColumnName(i) + ": " + columnValue + "\n");
+					System.out.println("*************************************************");
 				}
-				System.out.println("===========================================");
+				System.out.println("Finished reading from table: " + rsmd.getTableName(1));
 			}
 
 		} catch (SQLException e) {
