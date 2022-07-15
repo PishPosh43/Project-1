@@ -21,8 +21,10 @@ public class DummyUser {
 
 	// Below is an example of how you might define a property that serves as a
 	// foreign key
+//	@JoinColumn(columnName = "test_relation")
+//	private DummyOtherClass testRelation;
 	@JoinColumn(columnName = "test_relation")
-	private DummyOtherClass testRelation;
+	private int number;
 
 	public DummyUser() {
 		super();
@@ -42,7 +44,7 @@ public class DummyUser {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.testRelation = testRelation;
+		//this.testRelation = testRelation;
 	}
 
 	public DummyUser(String firstName, String lastName) {
