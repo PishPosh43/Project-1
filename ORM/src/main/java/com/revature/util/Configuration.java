@@ -1,14 +1,13 @@
 package com.revature.util;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,10 +15,8 @@ import java.util.List;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.revature.annotations.Column;
 import com.revature.annotations.Entity;
 import com.revature.annotations.Id;
-import com.revature.annotations.JoinColumn;
 
 //******************************************************************************************
 //******************************************************************************************
@@ -276,46 +273,40 @@ public class Configuration {
 			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
 			List<Field> allCols = Arrays.asList(clazz.getDeclaredFields());
 			List<Object> obList = new LinkedList<Object>();
-			
-			for(int i = 0; i<allCols.size();i++) {
+
+			for (int i = 0; i < allCols.size(); i++) {
 				allCols.get(i).setAccessible(true);
 				obList.add(allCols.get(i).get(object));
 			}
-			
-			
 			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + " VALUES( ";
 			for (int i = 0; i < allCols.size(); i++) {
-				if(obList.get(i).getClass() == String.class) {
-				sql = sql.concat("'" + obList.get(i).toString()+"'");
-				}
-				else {
+				if (obList.get(i).getClass() == String.class) {
+					sql = sql.concat("'" + obList.get(i).toString() + "'");
+				} else {
 					sql = sql.concat(obList.get(i).toString());
 				}
-				if(i<allCols.size()-1){
-				sql = sql.concat(", ");
-			}
-			}
-			sql = sql.concat(");");
-			System.out.println(sql);
-			
-			
-			Statement stmt = cfg.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-			
-			obList.clear();
-			while(rs.next()) {
-				int j = 0;
-				
-				Object obj = rs.getObject(j+1);
-				obList.add(obj);
-				
-				if(allCols.get(j) == metaModel.actuallyGetPrimaryKey().getPrimField()){
-					return (int)allCols.get(j).get(object);
+				if (i < allCols.size() - 1) {
+					sql = sql.concat(", ");
 				}
 			}
-			
-			
-			
+			sql = sql.concat(");");
+
+			Statement stmt = cfg.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+
+			obList.clear();
+			while (rs.next()) {
+				int j = 0;
+
+				Object obj = rs.getObject(j + 1);
+				obList.add(obj);
+
+				if (allCols.get(j) == metaModel.actuallyGetPrimaryKey().getPrimField()) {
+					System.out.println("Successfully inserted");
+					return (int) allCols.get(j).get(object);
+				}
+			}
+
 		} catch (Exception e) {
 			System.out.println("Unsuccessfull");
 			e.printStackTrace();
@@ -326,56 +317,294 @@ public class Configuration {
 //*************************************************************************************************************************************************************	
 
 	// UNFINISHED
-	public <T> List<Object> getAll(Class<T> clazz) {
+//	public <T> List<Object> getAll(Class<T> clazz) {
+//
+//		List<Class<?>> classes = new LinkedList<Class<?>>();
+//		List<Object> allCols = new LinkedList<Object>();
+//		int i = 1;
+//
+//		try {
+//			Connection cfg = ds.getConnection();
+//			MetaModel<T> metaModel = new MetaModel<T>(clazz);
+//
+//			metaModel.getColumns();
+//			metaModel.getForeignKeys();
+//			metaModel.getPrimaryKey();
+//
+//			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
+//
+//			Class<?>[] colClass = new Class<?>[sumOfAllColumns];
+//			String sql = "SELECT * FROM " + clazz.getAnnotation(Entity.class);
+//
+//			Statement stmt = cfg.createStatement();
+//			ResultSet rs = stmt.executeQuery(sql);
+//			ResultSetMetaData rsMeta = rs.getMetaData();
+//
+//			while (rs.next()) {
+//
+//				allCols.clear();
+//
+//				for (int k = 1; k <= sumOfAllColumns; k++) {
+//
+//					allCols.add(rs.getObject(k));
+//					System.out.println(allCols.get(k - 1));
+//					colClass[k - 1] = Class.forName(rsMeta.getColumnClassName(k));
+//				}
+//
+//				T classInstance = (T) clazz.getClass().getConstructor(colClass).newInstance();
+//				classes.add((Class<?>) classInstance);
+//				System.out.println("Out of the loop but still in try block");
+//				return allCols;
+//			}
+//		} catch (SQLException | IllegalArgumentException | SecurityException | ClassNotFoundException
+//				| InstantiationException | IllegalAccessException | InvocationTargetException
+//				| NoSuchMethodException e) {
+//			System.out.println("Unable to get information!");
+//			e.printStackTrace();
+//
+//		}
+//		System.out.println("Did this even work?");
+//		return allCols;
+//
+//	}
+	// *************************************************************************************************************************************************************
+	public void Delete(Object obj) {
+		// Extracting the metaClassModel from the object.
+		Class<?> cla;
+		cla = obj.getClass();
+		MetaModel<Class<?>> Class = MetaModel.of(obj.getClass());
+		// Getting to know the obj
+		String tableName = Class.getClassName();
+		PrimaryKeyField objPkField = Class.getPrimaryKey();
 
-		List<Class<?>> classes = new LinkedList<Class<?>>();
-		List<Object> allCols = new LinkedList<Object>();
-		int i = 1;
+		int PKValue = 0;
+
+		// This is the object PK Field Name
+		String PKFieldName = objPkField.getName();
 
 		try {
-			Connection cfg = ds.getConnection();
-			MetaModel<T> metaModel = new MetaModel<T>(clazz);
-
-			metaModel.getColumns();
-			metaModel.getForeignKeys();
-			metaModel.getPrimaryKey();
-
-			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
-
-			Class<?>[] colClass = new Class<?>[sumOfAllColumns];
-			String sql = "SELECT * FROM " + clazz.getAnnotation(Entity.class);
-
-			Statement stmt = cfg.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
-			ResultSetMetaData rsMeta = rs.getMetaData();
-
-			while (rs.next()) {
-
-				allCols.clear();
-
-				for (int k = 1; k <= sumOfAllColumns; k++) {
-
-					allCols.add(rs.getObject(k));
-					System.out.println(allCols.get(k - 1));
-					colClass[k - 1] = Class.forName(rsMeta.getColumnClassName(k));
-				}
-
-				T classInstance = (T) clazz.getClass().getConstructor(colClass).newInstance();
-				classes.add((Class<?>) classInstance);
-				System.out.println("Out of the loop but still in try block");
-				return allCols;
-			}
-		} catch (SQLException | IllegalArgumentException | SecurityException | ClassNotFoundException
-				| InstantiationException | IllegalAccessException | InvocationTargetException
-				| NoSuchMethodException e) {
-			System.out.println("Unable to get information!");
+			Field valF = cla.getDeclaredField(objPkField.getName());
+			valF.setAccessible(true);
+			// Getting the object PK value
+			PKValue = (int) valF.get(obj);
+		} catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println("Did this even work?");
-		return allCols;
+
+		// Building sql query to delete table
+		// Using String Builder cause apparently String just ain't it
+		StringBuilder sql_sb = new StringBuilder();
+		sql_sb.append("DELETE FROM " + cla.getAnnotation(Entity.class).tableName() + " WHERE " + objPkField.getPrimField().getAnnotation(Id.class).columnName() + " = " + PKValue);
+		System.out.println(sql_sb);
+		try (Connection conn = ds.getConnection()) {
+
+			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
+			st.executeUpdate();
+			System.out.println("Item has been deleted (hopefully)");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// *************************************************************************************************************************************************************
+	
+	public <T> void Update(Object obj) {
+
+		// Getting METAMODEL from Object.
+			// Named cla cause ide got angry at me for trying to use class
+			// Not sure why, but a happy ide is a good ide
+		Class<?> cla;
+		cla = obj.getClass();
+		MetaModel<Class<?>> theClass = MetaModel.of(obj.getClass());
+
+		// Getting the values/types from the given obj
+		List<T> values = new ArrayList<>();
+		int PK_value=0;
+		List<T> types = new ArrayList<>();
+		List<String> allColNames = new ArrayList<>();
+
+		// Getting Name, columns, fk, and pk from class using metamodel methods
+		String tableName = theClass.getClassName();
+		List<ColumnField> columns = theClass.getColumns();
+		List<ForeignKeyField> fkColums = theClass.getForeignKeys();
+		PrimaryKeyField thePKofObj = theClass.getPrimaryKey();
+
+		// Using string builder to make appending easier
+		StringBuilder sql_sb = new StringBuilder();
+
+		// filling the values/types arrays then appending them to string builder above
+		for (int i = 0; i < columns.size(); i++) {
+			allColNames.add(columns.get(i).getColumnName().toString());
+			try {
+				Field valF = cla.getDeclaredField(columns.get(i).getName());
+				// filling values.
+				valF.setAccessible(true);
+				values.add((T) valF.get(obj));
+			} catch (NoSuchFieldException | SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// filling types.
+			types.add((T) columns.get(i).getType());
+		}
+
+		// Checking for Foreign keys and adding them as needed
+		if (!fkColums.isEmpty()) {
+			for (int i = 0; i < fkColums.size(); i++) {
+				allColNames.add(fkColums.get(i).getColumnName().toString());
+				try {
+					Field valF = cla.getDeclaredField(fkColums.get(i).getName());
+					// filling values.
+					valF.setAccessible(true);
+					values.add((T) valF.get(obj));
+				} catch (NoSuchFieldException | SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// filling types.
+				types.add((T) fkColums.get(i).getType());
+			}
+		}
+
+		//Making SQL Statement to update the table
+		sql_sb.append("UPDATE " + cla.getAnnotation(Entity.class).tableName() + " SET ");
+		for(int i=0; i<values.size(); i++) {
+			
+			if(i+1!=values.size()) {
+				sql_sb.append(allColNames.get(i)+" = ");
+				if (types.get(i).toString().equalsIgnoreCase("int")) {
+					sql_sb.append((int) values.get(i)+" , ");
+				} else if (types.get(i).toString().equalsIgnoreCase("class java.lang.String")) {
+					sql_sb.append(" '"+values.get(i).toString()+"' , ");
+				} else {
+					sql_sb.append((int) values.get(i)+" , ");
+				}
+				
+			} else {
+				sql_sb.append(allColNames.get(i)+" = ");
+				if (types.get(i).toString().equalsIgnoreCase("int")) {
+					sql_sb.append((int) values.get(i));
+				} else if (types.get(i).toString().equalsIgnoreCase("class java.lang.String")) {
+					sql_sb.append(" '"+values.get(i).toString()+"' ");
+				} else {
+					sql_sb.append((int) values.get(i));
+				}
+				
+			}
+			
+		}
+		
+		//Getting the pk fields 
+		try {
+			Field valF = cla.getDeclaredField(thePKofObj.getName());
+			// filling values.
+			valF.setAccessible(true);
+			PK_value = valF.getInt(obj);
+		} catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		sql_sb.append(" WHERE "+thePKofObj.getPrimField().getAnnotation(Id.class).columnName()+" = "+PK_value);
+		 
+		try (Connection conn = ds.getConnection()) {
+			System.out.println(sql_sb);
+			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
+			st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void Read(Object obj) {
+		// Extracting the metaClassModel from the object.
+		Class<?> clays;
+		clays = obj.getClass();
+		MetaModel<Class<?>> theClass = MetaModel.of(obj.getClass());
+		// Getting to know the obj
+		String tableName = theClass.getClassName();
+		PrimaryKeyField objPkField = theClass.getPrimaryKey();
+
+		int PKValue = 0;
+
+		// This is the object PK Field Name
+		String PKFieldName = objPkField.getName();
+
+		try {
+			Field valF = clays.getDeclaredField(objPkField.getName());
+			valF.setAccessible(true);
+			// Getting the object PK value
+			PKValue = (int) valF.get(obj);
+		} catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// StringBuilder again
+		StringBuilder sql_sb = new StringBuilder();
+		sql_sb.append("SELECT * FROM " + clays.getAnnotation(Entity.class).tableName() + " WHERE " + objPkField.getPrimField().getAnnotation(Id.class).columnName() + " = " + PKValue + ";");
+		System.out.println(sql_sb);
+		try (Connection conn = ds.getConnection()) {
+
+			PreparedStatement st = conn.prepareStatement(sql_sb.toString());
+
+			ResultSet rs = st.executeQuery();
+
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			int columnsNumber = rsmd.getColumnCount();
+			while (rs.next()) {
+				System.out.println(
+						"\n====== " + rsmd.getTableName(1) + " with ID of " + rs.getObject(1).toString() + " ======");
+				for (int i = 1; i <= columnsNumber; i++) {
+					String columnValue = rs.getObject(i).toString();
+					System.out.print(rsmd.getColumnName(i) + " => " + columnValue + "\n");
+				}
+				System.out.println("===========================================");
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
-	// *************************************************************************************************************************************************************
-
+	
+	
+	
 }
