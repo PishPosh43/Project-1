@@ -120,143 +120,7 @@ public class Configuration {
 	}
 //******************************************************************************************
 
-	// UNFINISHED - NOT A CRUD METHOD ANYWAY
-//	public <T> void createTable(Class<?> clazz) {
-//		try {
-//			Connection cfg = ds.getConnection();
-//			MetaModel<T> metaModel = new MetaModel<T>(clazz);
-//			String sql = "CREATE TABLE " + metaModel.getSimpleClassName() + "( ";
-//			for (ColumnField c : metaModel.getColumns()) {
-//				sql = sql.concat("?, ");
-//			}
-//			sql = sql.concat(");");
-//			int i = 1;
-//
-//			PreparedStatement stmt = cfg.prepareStatement(sql);
-//
-//			for (ColumnField c : metaModel.getColumns()) {
-//
-//				System.out.println("Breadcrumb 1: " + c.getColumnName());
-//				System.out.println("Breadcrumb 2: " + metaModel.getColumns().size());
-//				System.out.println("Breadcrumb 3: " + c.getType());
-//				System.out.println("Breadcrumb 4: " + sql);
-//
-//				stmt.setString(i, c.getColumnName()
-//						+ (c.isPrimaryKey() == true ? "serial" + "PRIMARY KEY," : c.getType().toString()) + ",");
-//				i++;
-//			}
-//
-//			System.out.println("Table created successfully!");
-//
-//		} catch (SQLException e) {
-//			System.out.println("Unable to create table!");
-//			e.printStackTrace();
-//
-//		}
-//	}
-
-//*************************************************************************************************************************************************************
-
-//	public <T> PrimaryKeyField insert(Object object) {
-//
-//		Class<T> clazz = (Class<T>) object.getClass();
-//		MetaModel<T> metaModel = new MetaModel<T>(clazz);
-//		MetaModel.of(clazz);
-//
-//		try {
-//			Connection cfg = ds.getConnection();
-//			metaModel.getColumns();
-//			metaModel.getForeignKeys();
-//			metaModel.getPrimaryKey();
-//			List<Field> allCols = Arrays.asList(clazz.getDeclaredFields());
-//
-//			metaModel.actuallyGetColumns().get(0).getColField().setAccessible(true);
-//
-//			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
-//			// int sumOfAllConstructor = metaModel.actuallyGetColumns().size() + 1;
-//			String sql = "INSERT INTO " + clazz.getAnnotation(Entity.class).tableName() + "( ";
-//
-//			System.out.println(Types.JAVA_OBJECT);
-//
-//			for (int i = 0; i < sumOfAllColumns - 1; i++) {
-//				sql = sql.concat("? ,");
-//			}
-//
-//			sql = sql.concat("?) VALUES ( ");
-//
-//			for (int i = 0; i < sumOfAllColumns - 1; i++) {
-//				sql = sql.concat("? , ");
-//			}
-//
-//			sql = sql.concat("? )");
-//			System.out.println(sql);
-//			sql = sql.concat(");");
-//
-//			// PREPARED STATEMENT
-//			PreparedStatement stmt = cfg.prepareStatement(sql);
-//
-//			// RESULT SET
-//
-//			for (int j = 0; j < sumOfAllColumns; j++) {
-//				if (j < sumOfAllColumns) {
-//					allCols.get(j).setAccessible(true);
-//					stmt.setObject(j + 1, (Object)allCols.get(j).toString());
-//							
-//					System.out.println(allCols.get(j).get(object));
-//				}
-//				if ((allCols.get(j)).getAnnotation(Id.class) != null) {
-//
-//					metaModel.getPrimaryKey().getPrimField().setAccessible(true);
-//					stmt.setObject(j + sumOfAllColumns + 1, (metaModel.getPrimaryKey().getPrimField().get(object)));
-//
-//					
-//					
-//				} else if ((allCols.get(j)).getAnnotation(Column.class) != null) {
-//					//int ind = 0;
-//					for (ColumnField col : metaModel.actuallyGetColumns()) {
-//
-//						metaModel.actuallyGetColumns().get(j-1).getColField().setAccessible(true);
-//
-//						//System.out.println(ind);
-//						stmt.setObject(j + sumOfAllColumns + 1,
-//								(metaModel.actuallyGetColumns().get(j-1).getColField().get(object)));
-//						//System.out.println(
-//								//"Col object: " + metaModel.actuallyGetColumns().get(ind).getColField().get(object));
-//						System.out.println(stmt);
-//						//ind++;
-//					}
-//				} else if ((allCols.get(j)).getAnnotation(JoinColumn.class) != null) {
-//					int ind = 0;
-//					for (ForeignKeyField col : metaModel.actuallyGetForeignKeys()) {
-//						
-//						System.out.println(j);
-//						metaModel.actuallyGetForeignKeys().get(ind).getForField().setAccessible(true);
-//						stmt.setObject(j + sumOfAllColumns+1,
-//								(metaModel.actuallyGetForeignKeys().get(ind).getForField().get(object)), Types.OTHER );
-//System.out.println(metaModel.actuallyGetForeignKeys().get(ind).getForField().get(object));
-//						ind ++;
-//					}
-//				}
-//				System.out.println(stmt);
-//			}
-//
-//			ResultSet rs = stmt.executeQuery();
-//			ResultSetMetaData rsMeta = rs.getMetaData();
-//
-//			PrimaryKeyField prim;
-//			if (rs.next()) {
-//				prim = (PrimaryKeyField) rs.getObject(metaModel.actuallyGetPrimaryKey().getName());
-//				System.out.println("We returned a primary key: " + prim.getPrimField().get(object));
-//				return prim;
-//			}
-//		} catch (SQLException | IllegalArgumentException | IllegalAccessException e) {
-//			System.out.println("Unable to insert!");
-//			e.printStackTrace();
-//		}
-//		return null;
-//
-//	}
-
+	
 //*************************************************************************************************************************************************************		
 
 	public <T> int insert(Object object) {
@@ -316,59 +180,9 @@ public class Configuration {
 
 //*************************************************************************************************************************************************************	
 
-	// UNFINISHED
-//	public <T> List<Object> getAll(Class<T> clazz) {
-//
-//		List<Class<?>> classes = new LinkedList<Class<?>>();
-//		List<Object> allCols = new LinkedList<Object>();
-//		int i = 1;
-//
-//		try {
-//			Connection cfg = ds.getConnection();
-//			MetaModel<T> metaModel = new MetaModel<T>(clazz);
-//
-//			metaModel.getColumns();
-//			metaModel.getForeignKeys();
-//			metaModel.getPrimaryKey();
-//
-//			int sumOfAllColumns = metaModel.actuallyGetColumns().size() + 1 + metaModel.actuallyGetForeignKeys().size();
-//
-//			Class<?>[] colClass = new Class<?>[sumOfAllColumns];
-//			String sql = "SELECT * FROM " + clazz.getAnnotation(Entity.class);
-//
-//			Statement stmt = cfg.createStatement();
-//			ResultSet rs = stmt.executeQuery(sql);
-//			ResultSetMetaData rsMeta = rs.getMetaData();
-//
-//			while (rs.next()) {
-//
-//				allCols.clear();
-//
-//				for (int k = 1; k <= sumOfAllColumns; k++) {
-//
-//					allCols.add(rs.getObject(k));
-//					System.out.println(allCols.get(k - 1));
-//					colClass[k - 1] = Class.forName(rsMeta.getColumnClassName(k));
-//				}
-//
-//				T classInstance = (T) clazz.getClass().getConstructor(colClass).newInstance();
-//				classes.add((Class<?>) classInstance);
-//				System.out.println("Out of the loop but still in try block");
-//				return allCols;
-//			}
-//		} catch (SQLException | IllegalArgumentException | SecurityException | ClassNotFoundException
-//				| InstantiationException | IllegalAccessException | InvocationTargetException
-//				| NoSuchMethodException e) {
-//			System.out.println("Unable to get information!");
-//			e.printStackTrace();
-//
-//		}
-//		System.out.println("Did this even work?");
-//		return allCols;
-//
-//	}
+	
 	// *************************************************************************************************************************************************************
-	public void Delete(Object obj) {
+	public void delete(Object obj) {
 		// Extracting the metaClassModel from the object.
 		Class<?> cla;
 		cla = obj.getClass();
@@ -417,7 +231,7 @@ public class Configuration {
 	
 	// *************************************************************************************************************************************************************
 	
-	public <T> void Update(Object obj) {
+	public <T> void update(Object obj) {
 
 		// Getting METAMODEL from Object.
 			// Named cla cause ide got angry at me for trying to use class
@@ -545,7 +359,7 @@ public class Configuration {
 	}
 	
 	
-	public void Read(Object obj) {
+	public void read(Object obj) {
 		// Extracting the metaClassModel from the object.
 		Class<?> clays;
 		clays = obj.getClass();
